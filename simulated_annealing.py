@@ -1,4 +1,5 @@
 from random import random
+import numpy as np
 
 def simulated_annealing(init, temperature, neighbor, probability, fitness, max_iterations):
     solutions = [init] 
@@ -10,3 +11,8 @@ def simulated_annealing(init, temperature, neighbor, probability, fitness, max_i
             solutions.append(s)
     return s
 
+def metropolis_hastings_algorithm_probability(e, e_new, T):
+    if e_new < e:
+        return 1 
+    else:
+        return np.exp(-(e_new-e)/T)
