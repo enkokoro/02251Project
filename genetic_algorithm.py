@@ -19,6 +19,7 @@ def selection(population, fitnessScores):
 def recombination(parents, crossover, crossoverRate):
     nextGen = []
     lenParents = len(parents)
+
     for i in range(0, lenParents, 2):
         p1 = parents[i]
 
@@ -27,9 +28,11 @@ def recombination(parents, crossover, crossoverRate):
         else:
             p2 = parents[i + 1]
             if random() <= crossoverRate:
-                nextGen.extend([crossover(p1, p2)])
+                nextGen.extend(list(crossover(p1, p2)))
             else:
                 nextGen.extend([p1, p2])
+
+    return nextGen
 
 def mutation(nextGen, mutate, mutationRate):
     population = []
@@ -38,7 +41,8 @@ def mutation(nextGen, mutate, mutationRate):
             population.append(mutate(p))
         else:
             population.append(p)
-
+            
+    return population
 
 
 def geneticAlgorithm(input, crossover, crossoverRate, mutate, mutationRate, fitness, numGenerations):
@@ -48,8 +52,9 @@ def geneticAlgorithm(input, crossover, crossoverRate, mutate, mutationRate, fitn
     assert 0 < numGenerations
 
     population = input
+    print("input:", input)
     fitnessScores = [fitness(p) for p in population]
-    for _ in range(numGenerations):
+    for i in range(numGenerations):
         # Select parents
         parents = selection(population, fitnessScores)
 
