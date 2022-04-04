@@ -31,13 +31,14 @@ def metropolis_hastings_algorithm_probability(e, e_new, T):
 
 def print_simulated_annealing(solutions, fitnesses, temperatures, filename):
     fig, ax1 = plt.subplots()
-    solutions_color = 'blue'
+    fitness_color = 'blue'
+    best_fitness_color = 'green'
     temperatures_color = 'red'
 
     ax1.set_xlabel('iterations')
-    ax1.set_ylabel('solutions', color=solutions_color)
+    ax1.set_ylabel('fitness', color=fitness_color)
     ax1.plot(solutions, color='blue')
-    ax1.tick_params(axis='y', labelcolor=solutions_color)
+    ax1.tick_params(axis='y', labelcolor=fitness_color)
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('temperature', color=temperatures_color)
@@ -46,8 +47,19 @@ def print_simulated_annealing(solutions, fitnesses, temperatures, filename):
     fig.tight_layout()
     fig.savefig(filename)
 
-    # todo
-    # graph of best, worst from history
+    best_fitness = []
+    bf = None
+    for f in fitnesses:
+        if bf is None or f < bf:
+            bf = f 
+        best_fitness.append(bf)
+
+    ax3 = ax1.twinx()
+    ax3.set_ylabel('best fitness', color=best_fitness_color)
+    ax3.plot(best_fitness, color=best_fitness_color)
+    ax3.tick_params(axis='y', labelcolor=best_fitness_color)
+    fig.tight_layout()
+    fig.savefig(filename)
 
     print("Final Solution: ", solutions[-1], " Fitness: ", fitnesses[-1])
     print("Best Solution: ", solutions[np.argmin(fitnesses)], " Fitness: ", min(fitnesses))
