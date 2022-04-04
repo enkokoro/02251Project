@@ -1,7 +1,7 @@
 import numpy as np
 
 from continuous_fn import cts_mutate, cts_crossover
-from simulated_annealing import (simulated_annealing, 
+from algorithms.simulated_annealing import (simulated_annealing, 
                                     thermodynamic_simulated_annealing,
                                     thermodynamic_init_temp,
                                     print_simulated_annealing, 
@@ -42,6 +42,7 @@ for n in Ns:
     print("="*80)
     print(f"RASTRIGIN N={n}")
     rastrigin = Rastrigin(n)
+    rastrigin_folder = "rastrigin_results/"
     """
     Coral Reef Optimization
     """
@@ -59,7 +60,7 @@ for n in Ns:
     init = rastrigin.random_feasible_point()
     sols, fits, temps = simulated_annealing(init, lambda x: np.exp(x)-1, rastrigin.mutate, metropolis_hastings_algorithm_probability, 
         rastrigin.fitness, max_iterations=1000*n)
-    print_simulated_annealing(sols, fits, temps, f"Rastrigin_SA_n={n}_temp=e^x-1.png")
+    print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}SA_n={n}_temp=e^x-1.png")
 
     """
     Thermodynamic Simulated Annealing
@@ -71,5 +72,5 @@ for n in Ns:
     print(f"Thermodynamic SA init_temp = {init_temp} k_A = {k_A}")
     sols, fits, temps = thermodynamic_simulated_annealing(init, init_temp, k_A, rastrigin.mutate, metropolis_hastings_algorithm_probability, 
         rastrigin.fitness, max_iterations=1000*n)
-    print_simulated_annealing(sols, fits, temps, f"Rastrigin_thermodynamic_SA_n={n}_highprob={high_prob}_kA={k_A}.png")
+    print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}TSA_n={n}_highprob={high_prob}_kA={k_A}.png")
 
