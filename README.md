@@ -3,10 +3,11 @@ Team Name: SPACE
 Group Members: Semawit Gebrehiwot, Evelyn Kuo, Marina Sha, Lydia Yang
 
 Algorithms:
-- Coral Reef Optimization
-- Genetic Algorithm
-- Simulated Annealing
+- Coral Reef Optimization (coral_reef_optimization.py)
+- Genetic Algorithm (genetic_algorithm.py)
+- Simulated Annealing (simulated_annealing.py)
 
 Applications:
-- Continuous Functions (Rastrigin)
-- Power Plant Placement Problem
+- Reproduction Operators for Continuous Functions (continuous_fn.py)
+- Rastrigin Function (rastrigin.py)
+- Power Plant Placement Problem (power_plant.py)
