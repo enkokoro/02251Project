@@ -6,6 +6,20 @@ import matplotlib.pyplot as plt
 epsilon = 1e-5
 
 def simulated_annealing(init, temp_fn, neighbor_fn, prob_fn, fitness_fn, max_iterations):
+    """
+    Inputs
+    init: initial solution
+    temp_fn: temperature cooling schedule
+    neighbor_fn: generates neighbor solutions
+    prob_fn: acceptance probability function
+    fitness_fn: solution fitness evaluation function
+    max_iterations: number of iterations to run simulated annealing
+
+    Outputs
+    solutions: list of solutions for each iteration
+    fitnesses: corresponding fitnesses of the solutions
+    temperatures: temperatures over the iterations
+    """
     assert max_iterations > 0
     s = init
     solutions = [s] 
@@ -15,13 +29,20 @@ def simulated_annealing(init, temp_fn, neighbor_fn, prob_fn, fitness_fn, max_ite
     for k in range(max_iterations):
         T = temp_fn(1 - (k+1)/max_iterations)
         temperatures.append(T)
+
+        # generate nearby solution
         s_new = neighbor_fn(s)
+
+        # based off of temperature and new solution quality, choose whether to accept new solution
         if prob_fn(fitness_fn(s), fitness_fn(s_new), T) >= np.random.random():
             s = s_new
             f = fitness_fn(s)
+
         solutions.append(s)
         fitnesses.append(f)
+
     assert len(solutions) == len(temperatures)
+    assert len(solutions) == len(fitnesses)
     return solutions, fitnesses, temperatures
 
 def thermodynamic_init_temp(num_samples, high_prob, fitness_fn, random_generator_fn):
@@ -33,6 +54,21 @@ def thermodynamic_init_temp(num_samples, high_prob, fitness_fn, random_generator
     return np.average(np.array(temps))
 
 def thermodynamic_simulated_annealing(init, init_temp, k_A, neighbor_fn, prob_fn, fitness_fn, max_iterations):
+    """
+    Inputs
+    init: initial solution
+    init_temp: initial temperature
+    k_A (hyperparameter): tunes how fast we want the temperature to change
+    neighbor_fn: generates neighbor solutions
+    prob_fn: acceptance probability function
+    fitness_fn: solution fitness evaluation function
+    max_iterations: number of iterations to run simulated annealing
+
+    Outputs
+    solutions: list of solutions for each iteration
+    fitnesses: corresponding fitnesses of the solutions
+    temperatures: temperatures over the iterations
+    """
     assert max_iterations > 0
     s = init
     solutions = [s] 
@@ -43,8 +79,12 @@ def thermodynamic_simulated_annealing(init, init_temp, k_A, neighbor_fn, prob_fn
     total_cost_variation = 0 # delta_C_T
     total_entropy_variation = 0 # delta S_T
     for k in range(max_iterations):
+        # generate nearby solution
         s_new = neighbor_fn(s)
+
         delta_cost = fitness_fn(s_new) - fitness_fn(s) # delta C_k
+
+        # based off of temperature and new solution quality, choose whether to accept new solution
         if prob_fn(fitness_fn(s), fitness_fn(s_new), T) >= np.random.random():
             s = s_new
             f = fitness_fn(s)
