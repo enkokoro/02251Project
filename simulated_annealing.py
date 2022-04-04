@@ -23,11 +23,55 @@ def simulated_annealing(init, temp_fn, neighbor_fn, prob_fn, fitness_fn, max_ite
     assert len(solutions) == len(temperatures)
     return solutions, fitnesses, temperatures
 
+def thermodynamic_init_temp(num_samples, high_prob, fitness_fn, random_generator_fn):
+    temps = []
+    for i in range(num_samples):
+        f1 = fitness_fn(random_generator_fn())
+        f2 = fitness_fn(random_generator_fn())
+        temps.append(-abs(f1-f2)*np.log(high_prob))
+    return np.average(np.array(temps))
+
+def thermodynamic_simulated_annealing(init, init_temp, k_A, neighbor_fn, prob_fn, fitness_fn, max_iterations):
+    assert max_iterations > 0
+    s = init
+    solutions = [s] 
+    f = fitness_fn(s)
+    fitnesses = [f]
+    T = init_temp
+    temperatures = [T]
+    total_cost_variation = 0 # delta_C_T
+    total_entropy_variation = 0 # delta S_T
+    for k in range(max_iterations):
+        s_new = neighbor_fn(s)
+        delta_cost = fitness_fn(s_new) - fitness_fn(s) # delta C_k
+        if prob_fn(fitness_fn(s), fitness_fn(s_new), T) >= np.random.random():
+            s = s_new
+            f = fitness_fn(s)
+            total_cost_variation += delta_cost
+        
+        if delta_cost > 0: # update total entropy variation
+            total_entropy_variation = total_entropy_variation - delta_cost/T 
+        
+        if total_cost_variation >= 0 or total_entropy_variation == 0: # use default temp
+            T = init_temp 
+        else:
+            T = k_A*total_cost_variation/total_entropy_variation
+
+        solutions.append(s)
+        fitnesses.append(f)
+        temperatures.append(T)
+    assert len(solutions) == len(temperatures)
+    return solutions, fitnesses, temperatures
+
 def metropolis_hastings_algorithm_probability(e, e_new, T):
     if e_new < e:
         return 1 
     else:
         return np.exp(-(e_new-e)/(T+1e-5))
+
+"""Temperature(x): x in [0,1] starts at 1 and decreases linearly to 0"""
+def exponential_temperature(x, alpha):
+    return np.exp(alpha*x)-1
 
 def print_simulated_annealing(solutions, fitnesses, temperatures, filename):
     fig, ax1 = plt.subplots()
