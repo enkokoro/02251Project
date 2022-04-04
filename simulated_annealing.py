@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # todo make this into object?
+epsilon = 1e-5
 
 def simulated_annealing(init, temp_fn, neighbor_fn, prob_fn, fitness_fn, max_iterations):
     assert max_iterations > 0
@@ -50,7 +51,7 @@ def thermodynamic_simulated_annealing(init, init_temp, k_A, neighbor_fn, prob_fn
             total_cost_variation += delta_cost
         
         if delta_cost > 0: # update total entropy variation
-            total_entropy_variation = total_entropy_variation - delta_cost/T 
+            total_entropy_variation = total_entropy_variation - delta_cost/(T+epsilon) 
         
         if total_cost_variation >= 0 or total_entropy_variation == 0: # use default temp
             T = init_temp 
@@ -67,7 +68,7 @@ def metropolis_hastings_algorithm_probability(e, e_new, T):
     if e_new < e:
         return 1 
     else:
-        return np.exp(-(e_new-e)/(T+1e-5))
+        return np.exp(-(e_new-e)/(T+epsilon))
 
 """Temperature(x): x in [0,1] starts at 1 and decreases linearly to 0"""
 def exponential_temperature(x, alpha):
