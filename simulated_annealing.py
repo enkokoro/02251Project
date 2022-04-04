@@ -35,10 +35,19 @@ def print_simulated_annealing(solutions, fitnesses, temperatures, filename):
     best_fitness_color = 'green'
     temperatures_color = 'red'
 
+    best_fitness = []
+    bf = None
+    for f in fitnesses:
+        if bf is None or f < bf:
+            bf = f 
+        best_fitness.append(bf)
+
     ax1.set_xlabel('iterations')
-    ax1.set_ylabel('fitness', color=fitness_color)
-    ax1.plot(solutions, color='blue')
-    ax1.tick_params(axis='y', labelcolor=fitness_color)
+    ax1.set_ylabel('fitness')
+    ax1.plot(fitnesses, color=fitness_color, label='fitness')
+    ax1.plot(best_fitness, color=best_fitness_color, label='best fitness')
+    fig.legend()
+    ax1.tick_params(axis='y')
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('temperature', color=temperatures_color)
@@ -47,20 +56,8 @@ def print_simulated_annealing(solutions, fitnesses, temperatures, filename):
     fig.tight_layout()
     fig.savefig(filename)
 
-    best_fitness = []
-    bf = None
-    for f in fitnesses:
-        if bf is None or f < bf:
-            bf = f 
-        best_fitness.append(bf)
-
-    ax3 = ax1.twinx()
-    ax3.set_ylabel('best fitness', color=best_fitness_color)
-    ax3.plot(best_fitness, color=best_fitness_color)
-    ax3.tick_params(axis='y', labelcolor=best_fitness_color)
-    fig.tight_layout()
-    fig.savefig(filename)
 
     print("Final Solution: ", solutions[-1], " Fitness: ", fitnesses[-1])
     print("Best Solution: ", solutions[np.argmin(fitnesses)], " Fitness: ", min(fitnesses))
+    
 
