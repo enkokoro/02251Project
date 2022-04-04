@@ -56,25 +56,3 @@ def cts_crossover(parent1, parent2, num_children=1):
     for i in range(num_children):
         children.append(np.random.uniform(low, high))
     return children
-
-def rastrigin_random_feasible_point(n):
-    """
-    Rastrigin continuous function
-
-    Input
-    n: dimension of the input space
-
-    Output
-    result: a randomly generated point in the feasible solution space 
-
-    x in range [-5.12, 5.12]^n
-    """
-    return np.random.uniform(-5.12, 5.12, n)
-
-def rastrigin(x, A=10):
-    """
-    Rastrigin continuous function: optimize for the minimum
-
-    x in range [-5.12, 5.12]^n
-    """
-    return A*len(x) + np.sum(np.square(x) - A*np.cos(2*np.pi*x))
