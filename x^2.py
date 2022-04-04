@@ -1,4 +1,4 @@
-from simulated_annealing import (simulated_annealing, thermodynamic_init_temp, 
+from ...algorithms.simulated_annealing import (simulated_annealing, thermodynamic_init_temp, 
                                  thermodynamic_simulated_annealing,
                                  metropolis_hastings_algorithm_probability, 
                                  print_simulated_annealing)
