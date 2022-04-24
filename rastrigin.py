@@ -70,12 +70,12 @@ for n in Ns:
     """
     Thermodynamic Simulated Annealing
     """
-    print_alot = False
+    print_alot = True
     num_runs = 5
     print("-"*80)
     print("Thermodynamic Simulated Annealing")
-    high_probability_ps = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    k_A_ps = [0.01, 0.05, 0.1, 0.2, 0.5, 0.75, 0.9]
+    high_probability_ps = [0.8]#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    k_A_ps = [0.1]#[0.01, 0.05, 0.1, 0.2, 0.5, 0.75, 0.9]
     results = {}
     for high_prob in high_probability_ps:
         results_prob = {}

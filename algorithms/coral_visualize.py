@@ -25,7 +25,7 @@ def visualize_coral_reef_optimization(reef_evolutions, corals, empty_coral=0, fi
     ax1.set_aspect('equal')
 
     health_evolution = [np.array([[corals[coral_name].health for coral_name in coral_rows] for coral_rows in reef]) for reef in reef_evolutions]
-    print(health_evolution)
+    print("Best Coral Health: ", np.array(health_evolution).max())
     masked_array = np.ma.array (health_evolution[0], mask=np.isnan(health_evolution[0]))
     cmap = copy.copy(matplotlib.cm.get_cmap("jet"))
     cmap.set_bad('white',1.)
@@ -94,4 +94,4 @@ def test():
 
     visualize_coral_reef_optimization(reef_evolutions, corals, filename="test")
 
-test()
+# test()
