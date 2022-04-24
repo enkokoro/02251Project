@@ -57,7 +57,7 @@ for n in Ns:
             self.health = h
 
     def make_coral(corals, hf):
-        r = random.randint(1, 10000)
+        r = random.randint(1, 100)
         c = Coral(r, hf)
         corals[r] = c
         return c
@@ -196,7 +196,7 @@ for n in Ns:
 
         def animate2d_init():
             ax2.set_xlim(0, T-1)
-            ax2.set_ylim(np.nanmin(np.array(reef_evolutions))-extra_space, np.nanmax(np.array(reef_evolutions))+extra_space)
+            ax2.set_ylim(np.nanmin(np.array(health_evolution))-extra_space, np.nanmax(np.array(health_evolution))+extra_space)
             return (im, )# best_solution_ln, avg_solution_ln)
 
         def animate2d_from_logs_update(frame):
