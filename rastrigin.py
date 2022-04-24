@@ -56,7 +56,8 @@ for n in Ns:
 
     init = [rastrigin.random_feasible_point() for i in range(popSize)]
     res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, numGenerations)
-    printGA(best, avg, worst, f"{rastrigin_folder}GA_n={n}_Pop={popSize}_Gens={numGenerations}_crossRate={crossoverRate}_mutRat={mutationRate}.png")
+    printGA(best, avg, worst, f"{rastrigin_folder}GA_n={n}_Pop={popSize}_Gens={numGenerations}_crossRate={crossoverRate}_mutRat={mutationRate}.png", 
+        f"Rastrigin - Genetic Algorithm (n = {n})")
 
     """
     Simulated Annealing
