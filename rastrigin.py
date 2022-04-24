@@ -72,11 +72,18 @@ for n in Ns:
     Thermodynamic Simulated Annealing
     """
     print("-"*80)
-    high_prob = 0.8
-    init_temp = thermodynamic_init_temp(100, high_prob, rastrigin.fitness, rastrigin.random_feasible_point)
-    k_A = 0.1
-    print(f"Thermodynamic SA init_temp = {init_temp} k_A = {k_A}")
-    sols, fits, temps = thermodynamic_simulated_annealing(init, init_temp, k_A, rastrigin.mutate, metropolis_hastings_algorithm_probability, 
-        rastrigin.fitness, max_iterations=1000*n)
-    print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}TSA_n={n}_highprob={high_prob}_kA={k_A}.png")
+    high_probability_ps = [0.5,0.6,0.7,0.8,0.9]
+    k_A_ps = [0.1,0.2,0.5,0.75,0.9]
+    for high_prob in high_probability_ps:
+        for k_A in k_A_ps:
+            # high_prob = 0.8
+            # k_A = 0.1
+            print("-"*60)
+            print(f"high_prob: {high_prob} k_A: {k_A}")
+            init_temp = thermodynamic_init_temp(100, high_prob, rastrigin.fitness, rastrigin.random_feasible_point)
+            
+            print(f"Thermodynamic SA init_temp = {init_temp} k_A = {k_A}")
+            sols, fits, temps = thermodynamic_simulated_annealing(init, init_temp, k_A, rastrigin.mutate, metropolis_hastings_algorithm_probability, 
+                rastrigin.fitness, max_iterations=1000*n)
+            print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}TSA_n={n}_highprob={high_prob}_kA={k_A}.png")
 
