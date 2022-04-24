@@ -2,6 +2,7 @@ import matplotlib
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
+import copy
 
 import coral_reef_optimization as cro
 # reef: 2D array of the coral names
@@ -14,10 +15,6 @@ def visualize_coral_reef_optimization(reef_evolutions, corals, empty_coral=0, fi
 
     filename = filename 
     T = len(reef_evolutions)
-    # best_health = ?
-    # worst_health = ?
-    reef_height = len(reef_evolutions[0])
-    reef_width = len(reef_evolutions[0][0])
 
     # ax1: reef evolution, ax2: solution quality plot over time
     fig, ((ax1, ax2)) = plt.subplots(1, 2, figsize=(6.4*2, 4.8))
@@ -30,7 +27,7 @@ def visualize_coral_reef_optimization(reef_evolutions, corals, empty_coral=0, fi
     health_evolution = [np.array([[corals[coral_name].health for coral_name in coral_rows] for coral_rows in reef]) for reef in reef_evolutions]
     print(health_evolution)
     masked_array = np.ma.array (health_evolution[0], mask=np.isnan(health_evolution[0]))
-    cmap = matplotlib.cm.jet
+    cmap = copy.copy(matplotlib.cm.get_cmap("jet"))
     cmap.set_bad('white',1.)
     im = ax1.imshow(masked_array, interpolation='none', cmap="RdYlGn")
     fig.colorbar(im, ax=ax1)
@@ -49,8 +46,8 @@ def visualize_coral_reef_optimization(reef_evolutions, corals, empty_coral=0, fi
 
     def animate2d_init():
         ax2.set_xlim(0, T-1)
-        ax2.set_ylim(np.nanmin(np.array(reef_evolutions))-extra_space, np.nanmax(np.array(reef_evolutions))+extra_space)
-        return (im, )# best_solution_ln, avg_solution_ln)
+        ax2.set_ylim(np.nanmin(np.array(health_evolution))-extra_space, np.nanmax(np.array(health_evolution))+extra_space)
+        return (im, )
 
     def animate2d_from_logs_update(frame):
         reef = reef_evolutions[frame]
@@ -59,7 +56,7 @@ def visualize_coral_reef_optimization(reef_evolutions, corals, empty_coral=0, fi
         # im = ax1.imshow(masked_array, interpolation='none', cmap="RdYlGn")
         # fig.colorbar(im, ax=ax1)
 
-        return (im, ) #best_solution_ln, avg_solution_ln)
+        return (im, ) 
 
     update = animate2d_from_logs_update
     frames = T
@@ -96,3 +93,5 @@ def test():
         reef_evolutions.append(np.array(reef))
 
     visualize_coral_reef_optimization(reef_evolutions, corals, filename="test")
+
+test()
