@@ -131,7 +131,7 @@ def printGA(bestTuples, avg, worst, filename):
     fig, ax1 = plt.subplots()
     bestColor = 'green'
     avgColor = 'blue'
-    worstColor = 'red'
+    # worstColor = 'red'
 
     best = [f for (s,f) in bestTuples]
     solutions = [s for (s,f) in bestTuples]
@@ -141,7 +141,7 @@ def printGA(bestTuples, avg, worst, filename):
     plt.yscale("log")
     ax1.plot(best, color=bestColor, label='Best fitness')
     ax1.plot(avg, color=avgColor, label='Average fitness')
-    ax1.plot(worst, color=worstColor, label='Worst fitness')
+    # ax1.plot(worst, color=worstColor, label='Worst fitness')
     fig.legend()
     ax1.tick_params(axis='y')
 

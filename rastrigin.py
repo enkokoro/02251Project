@@ -1,11 +1,8 @@
+from continuous_fn import *
+from algorithms.simulated_annealing import *
+from algorithms.genetic_algorithm import *
 import numpy as np
 
-from continuous_fn import cts_mutate, cts_crossover
-from algorithms.simulated_annealing import (simulated_annealing, 
-                                    thermodynamic_simulated_annealing,
-                                    thermodynamic_init_temp,
-                                    print_simulated_annealing, 
-                                    metropolis_hastings_algorithm_probability)
 class Rastrigin():
     def __init__(self, n, A=10):
         self.n = n 
@@ -33,9 +30,9 @@ class Rastrigin():
     def mutate(self, x):
         return np.clip(cts_mutate(x, sigma=1), a_min=-5.12, a_max=5.12)
 
-    def crossover(self, p1, p2, num_children=1):
+    def crossover(self, p1, p2, num_children=2):
         unclipped = cts_crossover(p1, p2, num_children=num_children)
-        return [np.clip(unclip) for unclip in unclipped]
+        return [np.clip(unclip, -5.12, 5.12) for unclip in unclipped]
 
 Ns = [1, 5, 10]
 for n in Ns:
@@ -50,7 +47,16 @@ for n in Ns:
     """
     Genetic Algorithm
     """
+    print("-"*80)
+    print("Genetic Algorithm")
+    popSize = 100
+    crossoverRate = 0.7
+    mutationRate = 0.032
+    numGenerations = 10*n
 
+    init = [rastrigin.random_feasible_point() for i in range(popSize)]
+    res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, numGenerations)
+    printGA(best, avg, worst, f"{rastrigin_folder}GA_n={n}_Pop={popSize}_Gens={numGenerations}_crossRate={crossoverRate}_mutRat={mutationRate}.png")
 
     """
     Simulated Annealing
