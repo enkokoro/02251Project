@@ -35,7 +35,8 @@ class Rastrigin():
         unclipped = cts_crossover(p1, p2, num_children=num_children)
         return [np.clip(unclip) for unclip in unclipped]
 
-Ns = [1, 5, 10]
+Ns = [1]
+#Ns = [1, 5, 10]
 for n in Ns:
     print("="*80)
     print(f"RASTRIGIN N={n}")
@@ -45,10 +46,10 @@ for n in Ns:
     Coral Reef Optimization
     """
     class Coral:
-        def __init__(self, name, hf):
+        def __init__(self, name, r, hf):
             self.name = name
             self.hf = hf
-            self.health = hf(name)
+            self.health = hf(r)
         def getName(self):
             return self.name
         def getHealth(self):
@@ -57,8 +58,9 @@ for n in Ns:
             self.health = h
 
     def make_coral(corals, hf):
-        r = random.randint(1, 100)
-        c = Coral(r, hf)
+        r = random.randint(1, 10000)
+        r1 = random.uniform(-5, 5)
+        c = Coral(r, r1, hf)
         corals[r] = c
         return c
 
@@ -153,7 +155,7 @@ for n in Ns:
                             reef[i][j] = 0
 
     def hf(x):
-        return rastrigin.fitness(x)
+        return -rastrigin.fitness(x-2)
 
     # reef: 2D array of the coral names
     # corals: dictionary of the corals
@@ -175,7 +177,7 @@ for n in Ns:
         ax1.set_aspect('equal')
 
         health_evolution = [np.array([[corals[coral_name].health for coral_name in coral_rows] for coral_rows in reef]) for reef in reef_evolutions]
-        print(health_evolution)
+        print("Best Coral Health: ", np.nanmax(np.array(health_evolution)))
         masked_array = np.ma.array (health_evolution[0], mask=np.isnan(health_evolution[0]))
         cmap = matplotlib.cm.jet
         cmap.set_bad('white',1.)
@@ -226,7 +228,7 @@ for n in Ns:
         reef = [np.random.choice(l, M, p=[p0, 1-p0]) for y in range(N)] 
         corals = {}
         empty_coral = 0
-        corals[empty_coral] = Coral(empty_coral, hf)
+        corals[empty_coral] = Coral(empty_coral, 0, hf)
         corals[empty_coral].health = np.nan
         for i in range(N):
             for j in range(M):
@@ -235,7 +237,7 @@ for n in Ns:
                     reef[i][j] = c.getName()
         reef_evolutions = []
         for i in range(k):
-            step(corals, hf, reef, 0.5, 5, 0.1, 0.05)
+            step(corals, hf, reef, 0.5, 10, 0.1, 0.05)
             reef_evolutions.append(np.array(reef))
         visualize_coral_reef_optimization(reef_evolutions, corals, filename="test")
-CRO(hf, 5, 6, 0.01, 5)
+CRO(hf, 5, 6, 0.01, 50)
