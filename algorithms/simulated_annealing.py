@@ -144,7 +144,7 @@ def print_simulated_annealing(solutions, fitnesses, temperatures, filename):
     fig.savefig(filename)
 
 
-    print("Final Solution: ", solutions[-1], " Fitness: ", fitnesses[-1])
+    # print("Final Solution: ", solutions[-1], " Fitness: ", fitnesses[-1])
     print("Best Solution: ", solutions[np.argmin(fitnesses)], " Fitness: ", min(fitnesses))
     
 

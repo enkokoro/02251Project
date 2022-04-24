@@ -8,6 +8,10 @@ import coral_reef_optimization as cro
 # corals: dictionary of the corals
 extra_space = 1000
 def visualize_coral_reef_optimization(reef_evolutions, corals, empty_coral=0, filename="test"): 
+    empty_coral = 0
+    corals[empty_coral] = cro.Coral(empty_coral, lambda x: x)
+    corals[empty_coral].health = np.nan
+
     filename = filename 
     T = len(reef_evolutions)
     # best_health = ?
