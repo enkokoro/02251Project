@@ -37,7 +37,7 @@ class Rastrigin():
         unclipped = cts_crossover(p1, p2, num_children=num_children)
         return [np.clip(unclip) for unclip in unclipped]
 
-Ns = [1, 5, 10]
+Ns = [1] #, 5, 10]
 for n in Ns:
     print("="*80)
     print(f"RASTRIGIN N={n}")
