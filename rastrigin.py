@@ -44,6 +44,10 @@ def prints(s):
 
 Ns = [1, 5, 10]
 for n in Ns:
+    num_generations = 10
+    population_size = 30
+    num_runs = 10   # because algorithms are nondeterministic, we did some runs and took average
+
     print("="*80)
     print(f"RASTRIGIN N={n}")
     rastrigin = Rastrigin(n)
@@ -71,7 +75,6 @@ for n in Ns:
     Thermodynamic Simulated Annealing
     """
     print_alot = True
-    num_runs = 5
     print("-"*80)
     print("Thermodynamic Simulated Annealing")
     high_probability_ps = [0.8]#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -81,14 +84,12 @@ for n in Ns:
         results_prob = {}
         for k_A in k_A_ps:
             mfit = 0
+            prints("-"*60)
+            prints(f"high_prob: {high_prob} k_A: {k_A}")
             for _ in range(num_runs):
-                prints("-"*60)
-                prints(f"high_prob: {high_prob} k_A: {k_A}")
                 init_temp = thermodynamic_init_temp(100, high_prob, rastrigin.fitness, rastrigin.random_feasible_point)
-                
-                prints(f"Thermodynamic SA init_temp = {init_temp} k_A = {k_A}")
                 sols, fits, temps = thermodynamic_simulated_annealing(init, init_temp, k_A, rastrigin.mutate, metropolis_hastings_algorithm_probability, 
-                    rastrigin.fitness, max_iterations=1000*n)
+                    rastrigin.fitness, max_iterations=population_size*num_generations*n)
                 mfit += min(fits)
             if print_alot:
                 print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}TSA_n={n}_highprob={high_prob}_kA={k_A}.png")
