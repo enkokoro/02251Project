@@ -1,11 +1,10 @@
-from operator import truediv
-from typing import List, Optional, Dict, Tuple
 import numpy
+import matplotlib.pyplot as plt
 import random
 
 #notes/questions: don't know how to tune parameters, should larvae's health depend on parents, what's the purpose of sorting for asexual reproduction
 #lots of repeats in results (also extremely optimized) - is this because of asexual reproduction???
-#how to use/interpret results
+#how to use/interpret results, how to deal with/represent colonies of corals
 
 class Coral:
     def __init__(self, name, hf):
@@ -16,9 +15,11 @@ class Coral:
         return self.name
     def getHealth(self):
         return self.health
+    def setHealth(self, h):
+        self.health = h
 
 def make_coral(corals, hf):
-    r = random.randint(0, 10000)
+    r = random.randint(1, 10000)
     c = Coral(r, hf)
     corals[r] = c
     return c
@@ -65,12 +66,15 @@ def step(corals, hf, reef, pk, k, fa, pd):
         while (y == x): y = random.randint(0, l-1)
         c1 = bsp[x]
         c2 = bsp[y]
+        cHealth = (corals[c1].getHealth()+corals[c2].getHealth())/2
         bsp.remove(bsp[max(x, y)])
         bsp.remove(bsp[min(x, y)])
         #make larvae - does health function of larvae depend on health of parents?
         #can't add larvae into corals yet - haven't successfully settled into reef
+        #child's health = average of parents
         c = make_coral(newCorals, hf)
         newCorals[c.getName()] = c
+        c.setHealth(cHealth)
     #brooding - same question as before
     for i in range(len(br)):
         c = make_coral(newCorals, hf)
@@ -110,10 +114,8 @@ def step(corals, hf, reef, pk, k, fa, pd):
                     if (c.getHealth()<=mh):
                         reef[i][j] = 0
 
-def CRO(hf, k):
+def CRO(hf, N, M, p0, k):
     #hf is health function
-    N, M = 5, 6
-    p0 = 0.5
     l = [0, 1]
     #initialize N * M reef
     reef = [numpy.random.choice(l, M, p=[p0, 1-p0]) for y in range(N)] 
@@ -130,5 +132,5 @@ def CRO(hf, k):
 def hf(x):
     return x*x
 
-CRO(hf, 5)
+CRO(hf, 5, 6, 0.5, 5)
 
