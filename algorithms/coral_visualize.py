@@ -3,7 +3,7 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 
-import coral_reef_optimization as cro
+import algorithms.coral_reef_optimization_rastrigin as cro
 # reef: 2D array of the coral names
 # corals: dictionary of the corals
 extra_space = 1000
@@ -75,7 +75,7 @@ def test():
     l = [0, 1]
     hf = lambda x: x
     empty_coral = 0
-    corals[empty_coral] = cro.Coral(empty_coral, hf)
+    corals[empty_coral] = cro.Coral(empty_coral, 0, hf)
     corals[empty_coral].health = np.nan
 
     reef = [np.random.choice(l, M, p=[p0, 1-p0]) for y in range(N)]

@@ -1,5 +1,5 @@
 import numpy as np
-
+from algorithms.coral_reef_optimization_rastrigin import CRO
 from continuous_fn import cts_mutate, cts_crossover
 from algorithms.simulated_annealing import (simulated_annealing, 
                                     thermodynamic_simulated_annealing,
@@ -46,7 +46,7 @@ for n in Ns:
     """
     Coral Reef Optimization
     """
-
+    CRO(lambda x: -rastrigin.fitness(x-2), 5, 6, 0.01, 50)
     """
     Genetic Algorithm
     """
