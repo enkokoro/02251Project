@@ -1,11 +1,10 @@
-import numpy as np
+from continuous_fn import *
+from algorithms.simulated_annealing import *
+from algorithms.genetic_algorithm import *
 from algorithms.coral_reef_optimization_rastrigin import CRO
-from continuous_fn import cts_mutate, cts_crossover
-from algorithms.simulated_annealing import (simulated_annealing, 
-                                    thermodynamic_simulated_annealing,
-                                    thermodynamic_init_temp,
-                                    print_simulated_annealing, 
-                                    metropolis_hastings_algorithm_probability)
+import numpy as np
+import pandas as pd
+
 class Rastrigin():
     def __init__(self, n, A=10):
         self.n = n 
@@ -33,12 +32,20 @@ class Rastrigin():
     def mutate(self, x):
         return np.clip(cts_mutate(x, sigma=1), a_min=-5.12, a_max=5.12)
 
-    def crossover(self, p1, p2, num_children=1):
+    def crossover(self, p1, p2, num_children=2):
         unclipped = cts_crossover(p1, p2, num_children=num_children)
-        return [np.clip(unclip) for unclip in unclipped]
+        return [np.clip(unclip, -5.12, 5.12) for unclip in unclipped]
+
+def prints(s):
+    if print_alot:
+        print(s)
 
 Ns = [1] #, 5, 10]
 for n in Ns:
+    num_generations = 10
+    population_size = 30
+    num_runs = 10   # because algorithms are nondeterministic, we did some runs and took average
+
     print("="*80)
     print(f"RASTRIGIN N={n}")
     rastrigin = Rastrigin(n)
@@ -50,7 +57,17 @@ for n in Ns:
     """
     Genetic Algorithm
     """
+    print("-"*80)
+    print("Genetic Algorithm")
+    popSize = 100
+    crossoverRate = 0.7
+    mutationRate = 0.032
+    numGenerations = 10*n
 
+    init = [rastrigin.random_feasible_point() for i in range(popSize)]
+    res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, numGenerations)
+    printGA(best, avg, worst, f"{rastrigin_folder}GA_n={n}_Pop={popSize}_Gens={numGenerations}_crossRate={crossoverRate}_mutRat={mutationRate}.png", 
+        f"Rastrigin - Genetic Algorithm (n = {n})")
 
     """
     Simulated Annealing
@@ -65,12 +82,33 @@ for n in Ns:
     """
     Thermodynamic Simulated Annealing
     """
+    print_alot = True
     print("-"*80)
-    high_prob = 0.8
-    init_temp = thermodynamic_init_temp(100, high_prob, rastrigin.fitness, rastrigin.random_feasible_point)
-    k_A = 0.1
-    print(f"Thermodynamic SA init_temp = {init_temp} k_A = {k_A}")
-    sols, fits, temps = thermodynamic_simulated_annealing(init, init_temp, k_A, rastrigin.mutate, metropolis_hastings_algorithm_probability, 
-        rastrigin.fitness, max_iterations=1000*n)
-    print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}TSA_n={n}_highprob={high_prob}_kA={k_A}.png")
+    print("Thermodynamic Simulated Annealing")
+    high_probability_ps = [0.8]#[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    k_A_ps = [0.1]#[0.01, 0.05, 0.1, 0.2, 0.5, 0.75, 0.9]
+    results = {}
+    for high_prob in high_probability_ps:
+        results_prob = {}
+        for k_A in k_A_ps:
+            mfit = 0
+            prints("-"*60)
+            prints(f"high_prob: {high_prob} k_A: {k_A}")
+            for _ in range(num_runs):
+                init_temp = thermodynamic_init_temp(100, high_prob, rastrigin.fitness, rastrigin.random_feasible_point)
+                sols, fits, temps = thermodynamic_simulated_annealing(init, init_temp, k_A, rastrigin.mutate, metropolis_hastings_algorithm_probability, 
+                    rastrigin.fitness, max_iterations=population_size*num_generations*n)
+                mfit += min(fits)
+            if print_alot:
+                print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}TSA_n={n}_highprob={high_prob}_kA={k_A}.png")
+
+            results_prob[k_A] = mfit/num_runs
+        results[high_prob] = results_prob
+    
+    prints("-"*80)
+    print("Parameter Search Results")
+    results = pd.DataFrame(results)
+
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(results)
 
