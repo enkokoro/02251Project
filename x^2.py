@@ -36,7 +36,7 @@ mutationRate = 0.032
 numGenerations = max(100, maxValue//10)
 
 res, best, avg, worst = geneticAlgorithm(inputs, crossover, crossoverRate, mutate, mutationRate, square, numGenerations)
-printGA(best, avg, worst, f"{folder}GA_Pop={populationSize}_Gens={numGenerations}_crossRate={crossoverRate}_mutRat={mutationRate}.png")
+printGA(best, avg, worst, f"{folder}GA_Pop={populationSize}_Gens={numGenerations}_crossRate={crossoverRate}_mutRat={mutationRate}.png", f"X^2 - Genetic Algorithm")
 
 """
 Simulated Annealing
