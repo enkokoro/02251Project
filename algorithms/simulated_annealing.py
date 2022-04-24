@@ -129,12 +129,14 @@ def print_simulated_annealing(solutions, fitnesses, temperatures, filename):
 
     ax1.set_xlabel('iterations')
     ax1.set_ylabel('fitness')
+    plt.yscale("log")
     ax1.plot(fitnesses, color=fitness_color, label='fitness')
     ax1.plot(best_fitness, color=best_fitness_color, label='best fitness')
     fig.legend()
     ax1.tick_params(axis='y')
 
     ax2 = ax1.twinx()
+    plt.yscale("log")
     ax2.set_ylabel('temperature', color=temperatures_color)
     ax2.plot(temperatures, color=temperatures_color)
     ax2.tick_params(axis='y', labelcolor=temperatures_color)
