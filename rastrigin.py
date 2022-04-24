@@ -42,7 +42,7 @@ def prints(s):
 
 Ns = [1] #, 5, 10]
 for n in Ns:
-    num_generations = 10
+    num_generations = 50
     population_size = 30
     num_runs = 10   # because algorithms are nondeterministic, we did some runs and took average
 
@@ -53,7 +53,7 @@ for n in Ns:
     """
     Coral Reef Optimization
     """
-    CRO(lambda x: -rastrigin.fitness(x-2), 5, 6, 0.01, 50)
+    CRO(lambda x: -rastrigin.fitness(x-2), 5, 6, 0.01, num_generations)
     """
     Genetic Algorithm
     """
@@ -62,7 +62,7 @@ for n in Ns:
     popSize = 100
     crossoverRate = 0.7
     mutationRate = 0.032
-    numGenerations = 10*n
+    numGenerations = num_generations
 
     init = [rastrigin.random_feasible_point() for i in range(popSize)]
     res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, numGenerations)
