@@ -14,14 +14,13 @@ def initialize(reef, init, N, M, p0, hf):
     numCorals = round((size * p0) / (1 - p0))
     indices = np.random.randint(low=0, high=size, size=numCorals)
 
-    for i in indices:
+    # random.sample samples without replacement
+    samples = random.sample(init, len(indices))
+    for idx, i in enumerate(indices):
         row = i // M
         col = i % M
         
-        # Randomly select solution from initial list of solutions
-        j = random.randint(0, len(init) - 1)
-        coral = init[j]
-        init.remove(coral)
+        coral = samples[idx]
 
         # Each coral is a tuple of solution and fitness
         reef[row][col] = (coral, hf(coral)) # TODO need fitness??
@@ -40,15 +39,12 @@ def separate(reef, pk):
     return bsp, br
 
 def broadcastSpawning(bsp, crossover, newCorals, hf):
-    while (len(bsp) > 1):
-        # select couple
-        couple = random.sample(bsp, 2)
-        c1 = couple[0]
-        c2 = couple[1]
+    samples = random.sample(bsp, len(bsp)//2*2)
+    for i in range(len(bsp)//2):
+        c1 = samples[2*i]
+        c2 = samples[2*i+1]
         larva = crossover(c1[0], c2[0], num_children=1)[0] # crossover returns array of children
 
-        bsp.remove(c1)
-        bsp.remove(c2)
         newCorals.append((larva, hf(larva)))
 
 def brooding(br, mutate, newCorals, hf):
