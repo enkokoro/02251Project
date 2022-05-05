@@ -128,7 +128,7 @@ for algo in final_results:
     print("\tBest Objective Value: ", best_fit)
     fitnesses = [sol[1] for sol in final_results[algo]]
     print("Statistics for fitness")
-    pd.DataFrame(np.array(fitnesses)).describe()
+    print(pd.DataFrame(np.array(fitnesses)).describe())
     print("-"*80)
     
 
