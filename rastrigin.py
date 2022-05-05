@@ -42,9 +42,12 @@ def prints(s):
 
 Ns = [1] #, 5, 10]
 for n in Ns:
+    N = 5
+    M = 6
     num_generations = 50
-    population_size = 30
+    population_size = N * M
     num_runs = 10   # because algorithms are nondeterministic, we did some runs and took average
+    init = [rastrigin.random_feasible_point() for i in range(population_size)]
 
     print("="*80)
     print(f"RASTRIGIN N={n}")
@@ -53,20 +56,27 @@ for n in Ns:
     """
     Coral Reef Optimization
     """
-    CRO(lambda x: -rastrigin.fitness(x-2), 5, 6, 0.01, num_generations)
+    print("-"*80)
+    print("CRO")
+    p0 = 0.01
+    pk = 0.5
+    k = 10
+    Fa = 0.1
+    Fd = Fa
+    Pd = 0.05
+    solution, history = CRO(init, N, M, lambda x: -rastrigin.fitness(x-2), rastrigin.crossover, rastrigin.mutate, p0, pk, k, Fa, Fd, Pd, num_generations)
+    print(solution, history)
+
     """
     Genetic Algorithm
     """
     print("-"*80)
     print("Genetic Algorithm")
-    popSize = 100
     crossoverRate = 0.7
     mutationRate = 0.032
-    numGenerations = num_generations
 
-    init = [rastrigin.random_feasible_point() for i in range(popSize)]
-    res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, numGenerations)
-    printGA(best, avg, worst, f"{rastrigin_folder}GA_n={n}_Pop={popSize}_Gens={numGenerations}_crossRate={crossoverRate}_mutRat={mutationRate}.png", 
+    res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, num_generations)
+    printGA(best, avg, worst, f"{rastrigin_folder}GA_n={n}_Pop={population_size}_Gens={num_generations}_crossRate={crossoverRate}_mutRat={mutationRate}.png", 
         f"Rastrigin - Genetic Algorithm (n = {n})")
 
     """
