@@ -40,8 +40,13 @@ def prints(s):
     if print_alot:
         print(s)
 
-Ns = [1] #, 5, 10]
+Ns = [1, 5, 10]
 for n in Ns:
+    print("="*80)
+    print(f"RASTRIGIN N={n}")
+    rastrigin = Rastrigin(n)
+    rastrigin_folder = "rastrigin_results/"
+
     N = 5
     M = 6
     num_generations = 50
@@ -49,23 +54,19 @@ for n in Ns:
     num_runs = 10   # because algorithms are nondeterministic, we did some runs and took average
     init = [rastrigin.random_feasible_point() for i in range(population_size)]
 
-    print("="*80)
-    print(f"RASTRIGIN N={n}")
-    rastrigin = Rastrigin(n)
-    rastrigin_folder = "rastrigin_results/"
     """
     Coral Reef Optimization
     """
     print("-"*80)
     print("CRO")
-    p0 = 0.01
+    p0 = 0.1# 0.01
     pk = 0.5
     k = 10
     Fa = 0.1
     Fd = Fa
     Pd = 0.05
-    solution, history = CRO(init, N, M, lambda x: -rastrigin.fitness(x-2), rastrigin.crossover, rastrigin.mutate, p0, pk, k, Fa, Fd, Pd, num_generations)
-    print(solution, history)
+    solution, history = CRO(init, N, M, lambda x: -rastrigin.fitness(x), rastrigin.crossover, rastrigin.mutate, p0, pk, k, Fa, Fd, Pd, num_generations)
+    print(solution)#, history)
 
     """
     Genetic Algorithm

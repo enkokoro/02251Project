@@ -11,7 +11,7 @@ def initialize(reef, init, N, M, p0, hf):
     # p0 is a ratio of populated vs unpopulated colonies, not a probability!
     # Example in paper: N=5, M=6, p0=0.43, size=30, pop=9, unpop=21
     size = N * M
-    numCorals = round((size * p0) / (1 + p0))
+    numCorals = round((size * p0) / (1 - p0))
     indices = np.random.randint(low=0, high=size, size=numCorals)
 
     for i in indices:
@@ -35,8 +35,8 @@ def separate(reef, pk):
         r = random.random()
         if (r <= pk):
             bsp.append(coral)
-        else: br.append(coral)
-
+        else: 
+            br.append(coral)
     return bsp, br
 
 def broadcastSpawning(bsp, crossover, newCorals, hf):
@@ -45,19 +45,18 @@ def broadcastSpawning(bsp, crossover, newCorals, hf):
         couple = random.sample(bsp, 2)
         c1 = couple[0]
         c2 = couple[1]
-        larva = crossover(c1[0], c2[0], numChildren=1)
+        larva = crossover(c1[0], c2[0], num_children=1)[0] # crossover returns array of children
 
         bsp.remove(c1)
         bsp.remove(c2)
-
         newCorals.append((larva, hf(larva)))
 
 def brooding(br, mutate, newCorals, hf):
     for c in br:
-        larva = mutate(c)
+        larva = mutate(c[0])
         newCorals.append((larva, hf(larva)))
 
-def larvaeSetting(newCorals, k, reef, N, M)
+def larvaeSetting(newCorals, k, reef, N, M):
     for c in newCorals:
         for _ in range(k):
             settle(c, reef, N, M)
@@ -99,22 +98,25 @@ def depredation(reef, Fd, pd, N, M):
                 healths.append(h)
 
     healths.sort()
-    mh = healths[round(len(healths)*Fd)]
+    if len(healths) > 0: # do nothing if there are no corals
+        mh = healths[round(len(healths)*Fd)]
 
-    for i in range(N):
-        for j in range(M):
-            if (not reef[i][j] == None):
-                r = random.random()
-                if (r <= pd):
-                    c = reef[i][j]
-                    if (c[1] <= mh):
-                        reef[i][j] = None
+        for i in range(N):
+            for j in range(M):
+                if (not reef[i][j] == None):
+                    r = random.random()
+                    if (r <= pd):
+                        c = reef[i][j]
+                        if (c[1] <= mh):
+                            reef[i][j] = None
 
 #pk = fraction of broadcast spawners
 #k = number of times corals attempt to settle before giving up
 #fa = fraction of corals that asexually reproduce
 #pd = probability for depredation
-def CRO(init, N, M, hf, crossover, mutate, p0, pk, k, Fa, Fd, pd, numIters):
+def CRO(init, N, M, fitness_fn, crossover, mutate, p0, pk, k, Fa, Fd, pd, numIters):
+    infty = 1e12
+    hf = lambda x: fitness_fn(x[0])
     assert 0 < p0 and p0 < 1 and 0 < pk and pk < 1 and 0 < pd and pd < 1
     assert 0 < Fa and Fa < 1 and 0 < Fd and Fd < 1
     assert 0 < N and 0 < M and 0 <= numIters and 0 < k
@@ -124,7 +126,7 @@ def CRO(init, N, M, hf, crossover, mutate, p0, pk, k, Fa, Fd, pd, numIters):
 
     reef = [([None] * M) for row in range(N)]
     initialize(reef, init, N, M, p0, hf)
-
+   
     reef_evolutions = []
     for _ in range(numIters):
         bsp, br = separate(reef, pk)
@@ -142,9 +144,11 @@ def CRO(init, N, M, hf, crossover, mutate, p0, pk, k, Fa, Fd, pd, numIters):
 
         depredation (reef, Fd, pd, N, M)
 
-        reef_evolutions.append(np.array(reef))
+        reef_evolutions.append(np.array(reef, dtype=object))
 
-    flatten = [c for row in reef for c in row]
-    solution = max(flatten, lambda x: x[1])
+    flatten = list(filter(lambda x: x is not None, [c for row in reef for c in row]))
+    if len(flatten) == 0:
+        assert False, "no solutions found"
+    solution = max(flatten, key=lambda x: x[1])
     
     return solution, reef_evolutions
