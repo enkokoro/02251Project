@@ -53,7 +53,8 @@ for n in Ns:
     """
     Coral Reef Optimization
     """
-    CRO(lambda x: -rastrigin.fitness(x-2), 5, 6, 0.01, num_generations)
+    for i in range(num_runs):
+        CRO(lambda x: -rastrigin.fitness(x-2), 5, 6, 0.01, num_generations)
     """
     Genetic Algorithm
     """
