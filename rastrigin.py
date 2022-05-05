@@ -2,6 +2,7 @@ from continuous_fn import *
 from algorithms.simulated_annealing import *
 from algorithms.genetic_algorithm import *
 from algorithms.coral_reef_optimization_rastrigin import CRO
+from algorithms.coral_visualize import visualize_coral_reef_optimization
 import numpy as np
 import pandas as pd
 
@@ -65,8 +66,9 @@ for n in Ns:
     Fa = 0.1
     Fd = Fa
     Pd = 0.05
-    solution, history = CRO(init, N, M, lambda x: -rastrigin.fitness(x), rastrigin.crossover, rastrigin.mutate, p0, pk, k, Fa, Fd, Pd, num_generations)
-    print(solution)#, history)
+    solution, reef_evolutions = CRO(init, N, M, lambda x: -rastrigin.fitness(x), rastrigin.crossover, rastrigin.mutate, p0, pk, k, Fa, Fd, Pd, num_generations)
+    print(solution)
+    visualize_coral_reef_optimization(reef_evolutions, filename=f"rastrigin_n={n}")
 
     """
     Genetic Algorithm
