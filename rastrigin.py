@@ -37,6 +37,15 @@ class Rastrigin():
         unclipped = cts_crossover(p1, p2, num_children=num_children)
         return [np.clip(unclip, -5.12, 5.12) for unclip in unclipped]
 
+    def compare(self, x, y):
+        if self.fitness(x) > self.fitness(y): return -1 # y has a better fitness than x
+        elif self.fitness(x) < self.fitness(y): return 1 # x has a better fitness than y
+        else: return 0
+
+    # Sorted from best to worst fitness
+    def sort(self, lst, rev=False):
+        return sorted(lst, key=lambda x:self.fitness(x), reverse=rev)
+
 Ns = [1, 5, 10]
 for n in Ns:
     print("="*80)
@@ -44,9 +53,9 @@ for n in Ns:
     rastrigin = Rastrigin(n)
     rastrigin_folder = "rastrigin_results/"
 
-    N = 5
-    M = 6
-    num_generations = 50
+    N = 10
+    M = 10
+    num_generations = n * 100
     population_size = N * M
     num_runs = 10   # because algorithms are nondeterministic, we did some runs and took average
 
@@ -59,16 +68,18 @@ for n in Ns:
         """
         print("-"*80)
         print("CRO")
-        p0 = 0.05# 0.01
-        pk = 0.5
-        k = 10
-        Fa = 0.1
-        Fd = Fa
-        Pd = 0.05
-        solution, reef_evolutions = CRO(init, N, M, lambda x: -rastrigin.fitness(x), rastrigin.crossover, rastrigin.mutate, p0, pk, k, Fa, Fd, Pd, num_generations)
-        print(solution)
-        final_results['CRO'].append((solution[0], -solution[1]))
-        if solution[1] <= min([sol[1] for sol in final_results['CRO']]): # save best run
+        p0 = 0.4 # paper: 0.4
+        Fb = 0.9 # paper: 0.9
+        k = 2
+        Fa = 0.2 # paper: 0.1
+        Fd = Fa # paper: Fa
+        Pd = 0.05 # paper: [0, 0.1]
+        solution, reef_evolutions = CRO(init, N, M, rastrigin, p0, Fb, k, Fa, Fd, Pd, num_generations)
+        solution = np.array(solution)
+        print(solution, rastrigin.fitness(solution))
+
+        final_results['CRO'].append((solution, rastrigin.fitness(solution)))
+        if rastrigin.fitness(solution) <= min([sol[1] for sol in final_results['CRO']]): # save best run
             visualize_coral_reef_optimization(reef_evolutions, filename=f"rastrigin_n={n}")
 
         """
@@ -77,9 +88,10 @@ for n in Ns:
         print("-"*80)
         print("Genetic Algorithm")
         crossoverRate = 0.7
-        mutationRate = 0.032
+        mutationRate = 0.05
 
         res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, num_generations)
+        print(best[-1])
         res = np.array(res)
         final_results['GA'].append((res, rastrigin.fitness(res)))
         if rastrigin.fitness(res) <= min([sol[1] for sol in final_results['GA']]):
