@@ -47,19 +47,21 @@ class Rastrigin():
         return sorted(lst, key=lambda x:self.fitness(x), reverse=rev)
 
 res = {'1': [], '5':[], '10':[]}
-testValues = [0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75, 0.8, 0.85, 0.9, 0.95]
-# testValues = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5]
-parameter = 'p0'
+# testValues = [0.05, 0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75, 0.8, 0.85, 0.9, 0.95]
+# testValues = [0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5]
+# testValues = [0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2]
+testValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+parameter = 'k'
 
-p0 = 0.2 # paper: 0.4
-Fb = 0.75 # paper: 0.9
-k = 2
-Fa = 0.1 # paper: 0.1
+p0 = 0.2 # paper: 0.4 search: 0.3
+Fb = 0.75 # paper: 0.9 search: 0.85
+k = 2 # search: 1
+Fa = 0.1 # paper: 0.1 search: 0
 Fd = Fa # paper: Fa
-Pd = 0.05 # paper: [0, 0.1]
+Pd = 0.05 # paper: [0, 0.1] search: 0.06
 
 
-for p0 in testValues:
+for k in testValues:
     Ns = [1, 5, 10]
     for n in Ns:
         # print("="*80)
@@ -80,13 +82,14 @@ for p0 in testValues:
             """
             Coral Reef Optimization
             """
+            Fd = Fa
             solution, reef_evolutions = CRO(init, N, M, rastrigin, p0, Fb, k, Fa, Fd, Pd, num_generations)
             solution = np.array(solution)
 
             final_results['CRO'].append((solution, rastrigin.fitness(solution)))
 
         print("="*80)
-        print(f"SUMMARY OF RUNS, {parameter} = {p0}")
+        print(f"SUMMARY OF RUNS, {parameter} = {k}")
         print("="*80)
         for algo in final_results:
             print("Algorithm: ", algo)

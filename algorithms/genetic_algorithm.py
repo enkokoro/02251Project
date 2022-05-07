@@ -1,6 +1,7 @@
 from random import random
 from copy import copy
 import matplotlib.pyplot as plt
+from sys import float_info
 
 # Roulette wheel based selection
 def selection(population, fitnessScores):
@@ -8,9 +9,9 @@ def selection(population, fitnessScores):
 
     # maxFitness = max(fitnessScores)
     fit = fitnessScores
-    fitnessScores = [1/f for f in fitnessScores]  # do this to minimize fitness
+    fitnessScores = [1/(f+0.0000000000000000000000000000001) if f == 0.0 else 1/f for f in fitnessScores]  # do this to minimize fitness
     totalFitness = sum(fitnessScores)
-    relFitness = [f/totalFitness for f in fitnessScores]
+    relFitness = [f/totalFitness for f in fitnessScores if f != 0]
     prob = [sum(relFitness[:i+1]) for i in range(len(relFitness))]
     randNums = [random() for _ in range(len(population))]
     selected = []
@@ -20,9 +21,9 @@ def selection(population, fitnessScores):
             if selectionNum <= cutoff:
                 selected.append(population[i])
                 break
-    # if (len(population) != len(selected)):
-    #     print(population, "\n", fitnessScores, "\n", fit, "\n", selected)
-    #     print(len(population), len(selected))
+    if (len(population) != len(selected)):
+        print(population, "\n", fitnessScores, "\n", fit, "\n", selected)
+        print(len(population), len(selected))
     assert len(population) == len(selected)
     return selected
 

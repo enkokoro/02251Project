@@ -68,12 +68,12 @@ for n in Ns:
         """
         print("-"*80)
         print("CRO")
-        p0 = 0.4 # paper: 0.4
-        Fb = 0.9 # paper: 0.9
-        k = 2
-        Fa = 0.1 # paper: 0.1
+        p0 = 0.3 # paper: 0.4
+        Fb = 0.85 # paper: 0.9
+        k = 1
+        Fa = 0 # paper: 0.1
         Fd = Fa # paper: Fa
-        Pd = 0.05 # paper: [0, 0.1]
+        Pd = 0.06 # paper: [0, 0.1]
         solution, reef_evolutions = CRO(init, N, M, rastrigin, p0, Fb, k, Fa, Fd, Pd, num_generations)
         solution = np.array(solution)
 

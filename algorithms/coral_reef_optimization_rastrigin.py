@@ -98,8 +98,8 @@ def depredation(reef, Fd, pd, problem):
 #fa = fraction of corals that asexually reproduce
 #pd = probability for depredation
 def CRO(init, N, M, problem, p0, Fb, k, Fa, Fd, pd, numIters):
-    assert 0 < p0 and p0 < 1 and 0 < pd and pd < 1
-    assert 0 < Fb and Fb < 1 and 0 < Fa and Fa < 1 and 0 < Fd and Fd < 1
+    assert 0 < p0 and p0 < 1 and 0 <= pd and pd < 1
+    assert 0 <= Fb and Fb <= 1 and 0 <= Fa and Fa <= 1 and 0 <= Fd and Fd <= 1
     assert 0 < N and 0 < M and 0 <= numIters and 0 < k
     assert type(init) == list
     assert len(init) == N * M
