@@ -105,7 +105,7 @@ def CRO(init, N, M, problem, p0, Fb, k, Fa, Fd, pd, numIters):
     assert len(init) == N * M
     assert Fa + Fd <= 1
 
-    reef = [([None] * M) for row in range(N)]
+    reef = [[None] * M for row in range(N)]
     initialize(reef, init, N, M, p0)
    
     reef_evolutions = []
@@ -124,7 +124,7 @@ def CRO(init, N, M, problem, p0, Fb, k, Fa, Fd, pd, numIters):
 
         depredation (reef, Fd, pd, problem)
 
-        reef_evolutions.append(np.array(reef, dtype=float))
+        reef_evolutions.append(np.array(reef))
 
     flatten = list(filter(lambda x: x is not None, [c for row in reef for c in row]))
     if len(flatten) == 0:
