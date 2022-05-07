@@ -26,7 +26,7 @@ def visualize_coral_reef_optimization(reef_evolutions, fitness, filename="test")
     masked_array = np.ma.array(health_evolution[0], mask=np.isnan(health_evolution[0]))
     cmap = copy.copy(matplotlib.cm.get_cmap("jet"))
     cmap.set_bad('white',1.)
-    im = ax1.imshow(masked_array, interpolation='none', cmap="RdYlGn")
+    im = ax1.imshow(masked_array, interpolation='none', cmap="RdYlGn_r")
 
     ax2.set_title('Solution Quality')
     ax2.set(xlabel='Time')
