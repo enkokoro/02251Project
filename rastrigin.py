@@ -53,8 +53,8 @@ for n in Ns:
     rastrigin = Rastrigin(n)
     rastrigin_folder = "rastrigin_results/"
 
-    N = 10
-    M = 10
+    N = 5
+    M = 6
     num_generations = n * 100
     population_size = N * M
     num_runs = 10   # because algorithms are nondeterministic, we did some runs and took average
@@ -71,12 +71,11 @@ for n in Ns:
         p0 = 0.4 # paper: 0.4
         Fb = 0.9 # paper: 0.9
         k = 2
-        Fa = 0.2 # paper: 0.1
+        Fa = 0.1 # paper: 0.1
         Fd = Fa # paper: Fa
         Pd = 0.05 # paper: [0, 0.1]
         solution, reef_evolutions = CRO(init, N, M, rastrigin, p0, Fb, k, Fa, Fd, Pd, num_generations)
         solution = np.array(solution)
-        print(solution, rastrigin.fitness(solution))
 
         final_results['CRO'].append((solution, rastrigin.fitness(solution)))
         if rastrigin.fitness(solution) <= min([sol[1] for sol in final_results['CRO']]): # save best run
@@ -91,7 +90,6 @@ for n in Ns:
         mutationRate = 0.05
 
         res, best, avg, worst = geneticAlgorithm(init, rastrigin.crossover, crossoverRate, rastrigin.mutate, mutationRate, rastrigin.fitness, num_generations)
-        print(best[-1])
         res = np.array(res)
         final_results['GA'].append((res, rastrigin.fitness(res)))
         if rastrigin.fitness(res) <= min([sol[1] for sol in final_results['GA']]):
@@ -130,18 +128,18 @@ for n in Ns:
         if rastrigin.fitness(best) <= min([sol[1] for sol in final_results['TSA']]):
             print_simulated_annealing(sols, fits, temps, f"{rastrigin_folder}TSA_n={n}_highprob={high_prob}_kA={k_A}.png")
 
-print("="*80)
-print("SUMMARY OF RUNS")
-print("="*80)
-for algo in final_results:
-    print("Algorithm: ", algo)
-    best_sol, best_fit = min(final_results[algo], key=lambda x: x[1])
-    print("\tBest Solution: ", best_sol)
-    print("\tBest Objective Value: ", best_fit)
-    fitnesses = [sol[1] for sol in final_results[algo]]
-    print("Statistics for fitness")
-    print(pd.DataFrame(np.array(fitnesses)).describe())
-    print("-"*80)
+    print("="*80)
+    print(f"SUMMARY OF RUNS n={n}")
+    print("="*80)
+    for algo in final_results:
+        print("Algorithm: ", algo)
+        best_sol, best_fit = min(final_results[algo], key=lambda x: x[1])
+        print("\tBest Solution: ", best_sol)
+        print("\tBest Objective Value: ", best_fit)
+        fitnesses = [sol[1] for sol in final_results[algo]]
+        print("Statistics for fitness")
+        print(pd.DataFrame(np.array(fitnesses)).describe())
+        print("-"*80)
     
 
     
