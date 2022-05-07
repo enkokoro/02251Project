@@ -10,4 +10,4 @@ Algorithms (algorithms folder):
 Applications:
 - Reproduction Operators for Continuous Functions (continuous_fn.py)
 - x^2 Function (x^2.py, x^2_results folder)
-- Rastrigin Function (rastrigin.py, rastrigin_results folder)
+- Rastrigin Function (rastrigin.py, rastrigin_results folder, run python3 rastrigin.py)
