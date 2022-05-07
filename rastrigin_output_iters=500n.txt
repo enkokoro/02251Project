@@ -1,0 +1,11 @@
+================================================================================
+RASTRIGIN N=1
+Best Coral Health:  -5.197122732170101e-10
+Final Solution:  [1.83614542e-05]  Fitness:  6.688650344699454e-08
+Best Solution:  [1.83614541e-05]  Fitness:  6.688650344699454e-08
+Best Solution:  [0.00010641]  Fitness:  2.24634784906641e-06
+Best Solution:  [-7.34143285e-05]  Fitness:  1.0692666005951423e-06
+Best Coral Health:  -2.355449169044732e-12
+Best Solution:  [-0.00010136]  Fitness:  2.0384261034678275e-06
+Best Solution:  [4.75944331e-05]  Fitness:  4.4940371779489396e-07
+Best Coral Health:  -1.623733664857241e-06
