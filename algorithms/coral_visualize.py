@@ -9,7 +9,7 @@ import algorithms.coral_reef_optimization_rastrigin as cro
 # reef: 2D array of the coral names
 # corals: dictionary of the corals
 extra_space = 5
-def visualize_coral_reef_optimization(reef_evolutions, empty_coral=None, filename="test"): 
+def visualize_coral_reef_optimization(reef_evolutions, fitness, filename="test"): 
     filename = filename 
     T = len(reef_evolutions)
 
@@ -20,9 +20,9 @@ def visualize_coral_reef_optimization(reef_evolutions, empty_coral=None, filenam
 
     ax1.set_title('Coral Reef')
     ax1.set_aspect('equal')
-
-    health_evolution = [np.array([[np.nan if coral is None else coral[1] for coral in coral_rows] for coral_rows in reef]) for reef in reef_evolutions]
-    print("Best Coral Health: ", np.nanmax(np.array(health_evolution)))
+    
+    health_evolution = [np.array([[np.nan if coral is None else fitness(coral) for coral in coral_rows] for coral_rows in reef]) for reef in reef_evolutions]
+    print("Best Coral Health: ", np.nanmin(np.array(health_evolution)))
     masked_array = np.ma.array(health_evolution[0], mask=np.isnan(health_evolution[0]))
     cmap = copy.copy(matplotlib.cm.get_cmap("jet"))
     cmap.set_bad('white',1.)
@@ -34,9 +34,9 @@ def visualize_coral_reef_optimization(reef_evolutions, empty_coral=None, filenam
     fig.tight_layout()
 
     time_data = range(0, T)
-    best_solution_data = [np.nanmax(healths) for healths in health_evolution]
+    best_solution_data = [np.nanmin(healths) for healths in health_evolution]
     avg_solution_data = [np.nanmean(healths) for healths in health_evolution]
-    worst_solution_data = [np.nanmin(healths) for healths in health_evolution]
+    worst_solution_data = [np.nanmax(healths) for healths in health_evolution]
     best_solution_ln, = ax2.plot(time_data, best_solution_data, c='g')
     avg_solution_ln, = ax2.plot(time_data, avg_solution_data, c='y')
     ax2.legend(["best solution", "average solution"])

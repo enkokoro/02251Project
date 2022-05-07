@@ -124,7 +124,7 @@ def CRO(init, N, M, problem, p0, Fb, k, Fa, Fd, pd, numIters):
 
         depredation (reef, Fd, pd, problem)
 
-        reef_evolutions.append(np.array(reef, dtype=object))
+        reef_evolutions.append(np.array(reef, dtype=float))
 
     flatten = list(filter(lambda x: x is not None, [c for row in reef for c in row]))
     if len(flatten) == 0:
